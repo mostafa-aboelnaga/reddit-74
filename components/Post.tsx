@@ -84,23 +84,23 @@ function Post({ post }: Props) {
       </div>
     );
   return (
-    <Link href={`/post/${post.id}`}>
-      <div className="flex cursor-pointer rounded-md border border-gray-300 bg-white shadow-sm hover:border hover:border-gray-600">
-        <div className="flex flex-col items-center justify-start space-y-1 rounded-l-md bg-gray-50 p-4 text-gray-400">
-          <ArrowUpIcon
-            onClick={() => upVote(true)}
-            className={`voteButtons hover:text-blue-400 ${
-              vote && "text-blue-400"
-            }`}
-          />
-          <p className="text-black font-bold text-xs">{displayVotes(data)}</p>
-          <ArrowDownIcon
-            onClick={() => upVote(false)}
-            className={`voteButtons hover:text-red-400 ${
-              vote === false && "text-red-400"
-            }`}
-          />
-        </div>
+    <div className="flex cursor-pointer rounded-md border border-gray-300 bg-white shadow-sm hover:border hover:border-gray-600">
+      <div className="flex flex-col items-center justify-start space-y-1 rounded-l-md bg-gray-50 p-4 text-gray-400">
+        <ArrowUpIcon
+          onClick={() => upVote(true)}
+          className={`voteButtons hover:text-blue-400 ${
+            vote && "text-blue-400"
+          }`}
+        />
+        <p className="text-black font-bold text-xs">{displayVotes(data)}</p>
+        <ArrowDownIcon
+          onClick={() => upVote(false)}
+          className={`voteButtons hover:text-red-400 ${
+            vote === false && "text-red-400"
+          }`}
+        />
+      </div>
+      <Link href={`/post/${post.id}`}>
         <div className="p-3 pb-1">
           {/* Header */}
           <div className="flex items-center space-x-2">
@@ -148,8 +148,8 @@ function Post({ post }: Props) {
             </div>
           </div>
         </div>
-      </div>
-    </Link>
+      </Link>
+    </div>
   );
 }
 
