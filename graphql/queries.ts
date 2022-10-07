@@ -27,6 +27,7 @@ export const GET_ALL_POSTS = gql`
       title
       body
       image
+      video
       created_at
       subreddit_id
       username
@@ -60,6 +61,7 @@ export const GET_ALL_POSTS_BY_TOPIC = gql`
       title
       body
       image
+      video
       created_at
       subreddit_id
       username
@@ -93,6 +95,7 @@ export const GET_POST_BY_POST_ID = gql`
       title
       body
       image
+      video
       created_at
       subreddit_id
       username

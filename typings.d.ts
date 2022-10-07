@@ -25,6 +25,7 @@ export type Post = {
   id: number;
   body: string;
   image: string;
+  video: string
   subreddit_id: string;
   title: string;
   username: string;

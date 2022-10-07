@@ -1,7 +1,7 @@
 import { useSession } from "next-auth/react";
 import React, { useState } from "react";
 import Avatar from "./Avatar";
-import { LinkIcon, PhotoIcon } from "@heroicons/react/24/outline";
+import { LinkIcon, PhotoIcon, VideoCameraIcon } from "@heroicons/react/24/outline";
 import { useForm } from "react-hook-form";
 import { useMutation } from "@apollo/client";
 import { ADD_POST, ADD_SUBREDDIT } from "../graphql/mutations";
@@ -13,6 +13,7 @@ type FormData = {
   postTitle: string;
   postBody: string;
   postImage: string;
+  postVideo: string;
   subreddit: string;
 };
 
@@ -34,8 +35,9 @@ function PostBox({ subreddit }: Props) {
     refetchQueries: [GET_ALL_POSTS],
   });
   const [addSubreddit] = useMutation(ADD_SUBREDDIT);
-
   const [imageBoxOpen, setImageBoxOpen] = useState(false);
+  const [videoBoxOpen, setVideoBoxOpen] = useState(false);
+
   const onSubmit = handleSubmit(async (formData: FormData) => {
     console.log(formData);
     const notification = toast.loading("Creating new post...");
@@ -66,6 +68,7 @@ function PostBox({ subreddit }: Props) {
         console.log("Now creating this post within this new subreddit...");
 
         const image = formData.postImage || "";
+        const video = formData.postVideo || "";
 
         const {
           data: { insertPost: newPost },
@@ -74,6 +77,7 @@ function PostBox({ subreddit }: Props) {
             title: formData.postTitle,
             body: formData.postBody,
             image: image,
+            video: video,
             subreddit_id: newSubreddit.id,
             username: session?.user?.name,
           },
@@ -84,6 +88,7 @@ function PostBox({ subreddit }: Props) {
         console.log("Using an already existing subreddit...");
 
         const image = formData.postImage || "";
+        const video = formData.postVideo || "";
 
         const {
           data: { insertPost: newPost },
@@ -92,6 +97,7 @@ function PostBox({ subreddit }: Props) {
             title: formData.postTitle,
             body: formData.postBody,
             image: image,
+            video: video,
             subreddit_id: getSubredditListByTopic[0].id,
             username: session?.user?.name,
           },
@@ -142,6 +148,12 @@ function PostBox({ subreddit }: Props) {
             imageBoxOpen && "text-blue-300"
           }`}
         />
+        <VideoCameraIcon
+          onClick={() => setVideoBoxOpen(!videoBoxOpen)}
+          className={`h-6 text-gray-300 cursor-pointer ${
+            videoBoxOpen && "text-blue-300"
+          }`}
+        />
         <LinkIcon className="h-6 text-gray-300 cursor-pointer" />
       </div>
 
@@ -174,6 +186,17 @@ function PostBox({ subreddit }: Props) {
                 type="text"
                 placeholder="optional..."
                 {...register("postImage")}
+                className="m-2 flex-1 bg-blue-50 p-2 outline-none"
+              />
+            </div>
+          )}
+          {videoBoxOpen && (
+            <div className="flex items-center px-2">
+              <p className="min-w-[90px]">Video URL:</p>
+              <input
+                type="text"
+                placeholder="optional..."
+                {...register("postVideo")}
                 className="m-2 flex-1 bg-blue-50 p-2 outline-none"
               />
             </div>

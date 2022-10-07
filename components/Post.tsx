@@ -15,15 +15,17 @@ import { Jelly } from "@uiball/loaders";
 import { Post, Vote } from "../typings";
 import toast from "react-hot-toast";
 import { useSession } from "next-auth/react";
-import { GET_ALL_VOTES_BY_POST_ID } from "../graphql/queries";
+import { GET_ALL_POSTS, GET_ALL_VOTES_BY_POST_ID } from "../graphql/queries";
 import { useMutation, useQuery } from "@apollo/client";
-import { ADD_VOTE } from "../graphql/mutations";
+import { ADD_VOTE, DELETE_POST } from "../graphql/mutations";
+import { useRouter } from "next/router";
 
 type Props = {
   post: Post;
 };
 
 function Post({ post }: Props) {
+  const router = useRouter();
   const [vote, setVote] = useState<boolean>();
   const { data: session } = useSession();
 
@@ -36,6 +38,27 @@ function Post({ post }: Props) {
   const [addVote] = useMutation(ADD_VOTE, {
     refetchQueries: [GET_ALL_VOTES_BY_POST_ID],
   });
+
+  const [deletePost] = useMutation(DELETE_POST, {
+    refetchQueries: [GET_ALL_POSTS]
+  });
+
+  const deletePostHandler = async () => {
+    if (!session) {
+      toast("🚩 You need to sign in to delete something!");
+      return;
+    }
+
+    await deletePost({
+      variables: {
+        id: post.id,
+      },
+    });
+
+    router.push("/")
+    toast("Post deleted 😁👍");
+
+  };
 
   const upVote = async (isUpvote: boolean) => {
     if (!session) {
@@ -103,17 +126,24 @@ function Post({ post }: Props) {
       <Link href={`/post/${post.id}`}>
         <div className="p-3 pb-1">
           {/* Header */}
-          <div className="flex items-center space-x-2">
-            <Avatar seed={post.subreddit[0]?.topic} />
-            <p className="text-xs text-gray-400">
-              <Link href={`/subreddit/${post.subreddit[0]?.topic}`}>
-                <span className="font-bold text-black hover:underline hover:text-blue-400">
-                  r/{post.subreddit[0]?.topic}
-                </span>
-              </Link>{" "}
-              - Posted by u/
-              {post.username} <TimeAgo date={post.created_at} />
-            </p>
+          <div className="flex justify-between items-center w-[36rem]">
+            <div className="flex items-center space-x-2">
+              <Avatar seed={post.subreddit[0]?.topic} />
+              <p className="text-xs text-gray-400">
+                <Link href={`/subreddit/${post.subreddit[0]?.topic}`}>
+                  <span className="font-bold text-black hover:underline hover:text-blue-400">
+                    r/{post.subreddit[0]?.topic}
+                  </span>
+                </Link>{" "}
+                - Posted by u/
+                {post.username} <TimeAgo date={post.created_at} />
+              </p>
+            </div>
+            {post.username === session?.user?.name && (
+              <div>
+                <button onClick={() => deletePostHandler()}>Delete</button>
+              </div>
+            )}
           </div>
 
           {/* Body */}
@@ -123,7 +153,8 @@ function Post({ post }: Props) {
           </div>
           {/* Image */}
 
-          <img className="w-full" src={post.image} alt="" />
+          {post.image && <img className="w-full" src={post.image} alt="" />}
+          {post.video && <video className="w-full" src={post.video} controls />}
 
           {/* Footer */}
           <div className="flex space-x-4 text-gray-400">

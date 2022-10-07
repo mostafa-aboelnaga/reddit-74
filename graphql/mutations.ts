@@ -4,6 +4,7 @@ export const ADD_POST = gql`
   mutation InsertPost(
     $body: String!
     $image: String!
+    $video: String!
     $subreddit_id: ID!
     $title: String!
     $username: String!
@@ -11,6 +12,7 @@ export const ADD_POST = gql`
     insertPost(
       body: $body
       image: $image
+      video: $video
       subreddit_id: $subreddit_id
       title: $title
       username: $username
@@ -19,6 +21,26 @@ export const ADD_POST = gql`
       created_at
       id
       image
+      video
+      subreddit_id
+      title
+      username
+    }
+  }
+`;
+
+export const DELETE_POST = gql`
+  mutation DeletePost(
+    $id: ID!
+  ) {
+    deletePost(
+      id: $id
+    ) {
+      body
+      created_at
+      id
+      image
+      video
       subreddit_id
       title
       username
