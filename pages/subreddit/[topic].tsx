@@ -6,8 +6,10 @@ import PostBox from "../../components/PostBox";
 
 function Subreddit() {
   const {
-    query: { topic },
+    query: { topic, search },
   } = useRouter();
+  const searchQuery = search as (string | undefined)
+  
   return (
     <div className={`h-24 bg-red-400 p-8`}>
       <div className="-mx-8 mt-10 bg-white">
@@ -26,7 +28,7 @@ function Subreddit() {
 
       <div className="mx-auto max-w-5xl mt-5 pb-10">
         <PostBox subreddit={topic as string} />
-        <Feed topic={topic as string} />
+        <Feed topic={topic as string} searchQuery={searchQuery}/>
       </div>
     </div>
   );

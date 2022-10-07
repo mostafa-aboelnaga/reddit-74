@@ -18,8 +18,27 @@ import {
 } from "@heroicons/react/24/outline";
 import { signIn, signOut, useSession } from "next-auth/react";
 import Link from "next/link";
+import { useForm } from "react-hook-form";
+import { useRouter } from "next/router";
+
+type searchData = {
+  searchQuery: string;
+};
 
 function Header() {
+  const router = useRouter();
+  const { register, setValue, handleSubmit } = useForm<searchData>();
+  console.log(router);
+  const onSubmit = (values: searchData) => {
+    router.push({
+      pathname: router.route.includes("/post/[postId]")
+        ? "/"
+        : router.asPath.split("?")[0],
+      query: { search: values.searchQuery },
+    });
+    setValue("searchQuery", "");
+  };
+
   const { data: session } = useSession();
   return (
     <div className="top-0 sticky z-50 flex items-center bg-white px-4 py-2 shadow-sm">
@@ -41,9 +60,13 @@ function Header() {
         <ChevronDownIcon className="h-5 w-5" />
       </div>
 
-      <form className="flex flex-1 items-center space-x-2 border bg-gray-100 border-gray-200 px-3 py-1 rounded-lg">
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="flex flex-1 items-center space-x-2 border bg-gray-100 border-gray-200 px-3 py-1 rounded-lg"
+      >
         <MagnifyingGlassIcon className="h-6 w-6 text-gray-400" />
         <input
+          {...register("searchQuery")}
           className="flex-1 bg-transparent outline-none"
           type="text"
           placeholder="Search Reddit 7.4"
