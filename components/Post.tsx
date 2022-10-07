@@ -40,7 +40,7 @@ function Post({ post }: Props) {
   });
 
   const [deletePost] = useMutation(DELETE_POST, {
-    refetchQueries: [GET_ALL_POSTS]
+    refetchQueries: [GET_ALL_POSTS],
   });
 
   const deletePostHandler = async () => {
@@ -55,9 +55,8 @@ function Post({ post }: Props) {
       },
     });
 
-    router.push("/")
+    router.push("/");
     toast("Post deleted 😁👍");
-
   };
 
   const upVote = async (isUpvote: boolean) => {
@@ -154,7 +153,9 @@ function Post({ post }: Props) {
           {/* Image */}
 
           {post.image && <img className="w-full" src={post.image} alt="" />}
-          {post.video && <video className="w-full" src={post.video} controls />}
+          {post.video && (
+            <video className="w-full h-96" src={post.video} controls />
+          )}
 
           {/* Footer */}
           <div className="flex space-x-4 text-gray-400">
