@@ -7,6 +7,7 @@ import {
   EllipsisHorizontalIcon,
   GiftIcon,
   ShareIcon,
+  TrashIcon,
 } from "@heroicons/react/24/outline";
 import TimeAgo from "react-timeago";
 import Avatar from "./Avatar";
@@ -123,10 +124,10 @@ function Post({ post }: Props) {
         />
       </div>
       <Link href={`/post/${post.id}`}>
-        <div className="p-3 pb-1">
+        <div className="pt-3 pb-1 px-4 flex-1">
           {/* Header */}
-          <div className="flex justify-between items-center w-[36rem]">
-            <div className="flex items-center space-x-2">
+          <div className="flex justify-between items-center w-full">
+            <div className="flex items-center space-x-2 w-[80%]">
               <Avatar seed={post.subreddit[0]?.topic} />
               <p className="text-xs text-gray-400">
                 <Link href={`/subreddit/${post.subreddit[0]?.topic}`}>
@@ -139,8 +140,13 @@ function Post({ post }: Props) {
               </p>
             </div>
             {post.username === session?.user?.name && (
-              <div>
-                <button onClick={() => deletePostHandler()}>Delete</button>
+              <div className="flex flex-1 items-center justify-end">
+                <div className="flex items-center justify-center text-red-500 bg-transparent hover:text-white hover:bg-red-500 h-10 w-10 rounded-full">
+                  <TrashIcon
+                    className="h-5 w-5"
+                    onClick={() => deletePostHandler()}
+                  />
+                </div>
               </div>
             )}
           </div>
@@ -149,15 +155,14 @@ function Post({ post }: Props) {
           <div className="py-4">
             <h2 className="text-xl font-semibold">{post.title}</h2>
             <p className="mt-2 text-sm font-light">{post.body}</p>
+            {post.image && (
+              <img className="w-full h-96" src={post.image} alt="" />
+            )}
+            {post.video && (
+              <video className="w-full h-96" src={post.video} controls />
+            )}
           </div>
           {/* Image */}
-
-          {post.image && (
-            <img className="w-full h-96" src={post.image} alt="" />
-          )}
-          {post.video && (
-            <video className="w-full h-96" src={post.video} controls />
-          )}
 
           {/* Footer */}
           <div className="flex space-x-4 text-gray-400">
