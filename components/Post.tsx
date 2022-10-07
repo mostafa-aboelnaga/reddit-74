@@ -152,7 +152,9 @@ function Post({ post }: Props) {
           </div>
           {/* Image */}
 
-          {post.image && <img className="w-full" src={post.image} alt="" />}
+          {post.image && (
+            <img className="w-full h-96" src={post.image} alt="" />
+          )}
           {post.video && (
             <video className="w-full h-96" src={post.video} controls />
           )}
