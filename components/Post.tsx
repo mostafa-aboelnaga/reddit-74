@@ -57,7 +57,7 @@ function Post({ post }: Props) {
     });
 
     router.push("/");
-    toast("Post deleted 😁👍");
+    toast("✅ Post deleted!");
   };
 
   const upVote = async (isUpvote: boolean) => {
